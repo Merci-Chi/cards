@@ -8,7 +8,6 @@
     :root {
       --bg: #070912;
       --text: #f7f8ff;
-      --muted: rgba(247,248,255,.66);
       --panel: rgba(18, 24, 39, .82);
       --line: rgba(255,255,255,.10);
       --green: #58ff9a;
@@ -138,6 +137,73 @@
       line-height: .8;
     }
 
+    .mark {
+      position: absolute;
+      width: clamp(120px, 36vw, 190px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: clamp(4.6rem, 20vw, 8rem);
+      font-weight: 950;
+      line-height: 1;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 4;
+      transform: scale(.72) translateY(8px);
+      border: 3px solid rgba(255,255,255,.92);
+    }
+
+    .mark.show {
+      animation: markFloat .95s cubic-bezier(.16, 1, .3, 1) both;
+    }
+
+    .mark.good {
+      color: #062513;
+      background: linear-gradient(135deg, #58ff9a, #75e8ff);
+      box-shadow:
+        0 0 55px rgba(88, 255, 154, .55),
+        0 22px 44px rgba(0,0,0,.38),
+        inset 0 0 0 8px rgba(255,255,255,.18);
+      text-shadow: 0 2px 0 rgba(255,255,255,.22);
+    }
+
+    .mark.bad {
+      color: #31070e;
+      background: linear-gradient(135deg, #ff6678, #ffb36b);
+      box-shadow:
+        0 0 55px rgba(255, 102, 120, .55),
+        0 22px 44px rgba(0,0,0,.38),
+        inset 0 0 0 8px rgba(255,255,255,.18);
+      text-shadow: 0 2px 0 rgba(255,255,255,.18);
+    }
+
+    @keyframes markFloat {
+      0% {
+        opacity: 0;
+        transform: scale(.66) translateY(16px) rotate(-4deg);
+        filter: blur(1px);
+      }
+      18% {
+        opacity: 1;
+        transform: scale(1.08) translateY(0) rotate(1deg);
+        filter: blur(0);
+      }
+      42% {
+        opacity: 1;
+        transform: scale(1) translateY(0) rotate(0deg);
+      }
+      78% {
+        opacity: 1;
+        transform: scale(1) translateY(-4px) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(.92) translateY(-22px) rotate(3deg);
+        filter: blur(.8px);
+      }
+    }
+
     .buttons {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -232,12 +298,13 @@
   <div class="app">
     <main class="table">
       <div id="card" class="card"></div>
+      <div id="mark" class="mark">✓</div>
     </main>
 
     <section class="buttons">
-      <button class="minus" id="minus">-1</button>
-      <button class="zero" id="zero">0</button>
       <button class="plus" id="plus">+1</button>
+      <button class="zero" id="zero">0</button>
+      <button class="minus" id="minus">-1</button>
     </section>
 
     <section class="bottom">
@@ -260,6 +327,7 @@
     let locked = false;
 
     const cardEl = document.getElementById("card");
+    const markEl = document.getElementById("mark");
     const countPill = document.getElementById("countPill");
 
     function shuffle(items) {
@@ -311,11 +379,24 @@
       `;
     }
 
+    function flashMark(isCorrect) {
+      markEl.className = "mark " + (isCorrect ? "good" : "bad");
+      markEl.textContent = isCorrect ? "✓" : "×";
+      void markEl.offsetWidth;
+      markEl.classList.add("show");
+    }
+
     function answer(num) {
       if (locked) return;
       locked = true;
-      currentCount += value(currentCard);
-      drawCard();
+
+      const actual = value(currentCard);
+      const isCorrect = num === actual;
+
+      currentCount += actual;
+      flashMark(isCorrect);
+
+      setTimeout(drawCard, 620);
     }
 
     function revealCount() {
@@ -332,18 +413,19 @@
       buildDeck();
       drawCard();
       countPill.classList.remove("show");
+      markEl.className = "mark";
     }
 
-    document.getElementById("minus").addEventListener("click", () => answer(-1));
-    document.getElementById("zero").addEventListener("click", () => answer(0));
     document.getElementById("plus").addEventListener("click", () => answer(1));
+    document.getElementById("zero").addEventListener("click", () => answer(0));
+    document.getElementById("minus").addEventListener("click", () => answer(-1));
     document.getElementById("reveal").addEventListener("click", revealCount);
     document.getElementById("reset").addEventListener("click", reset);
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "-" || e.key === "_") answer(-1);
-      if (e.key === "0") answer(0);
       if (e.key === "1" || e.key === "+") answer(1);
+      if (e.key === "0") answer(0);
+      if (e.key === "-" || e.key === "_") answer(-1);
       if (e.key.toLowerCase() === "r") reset();
       if (e.key === " ") revealCount();
     });
