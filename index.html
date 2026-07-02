@@ -5,32 +5,350 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Card Count Trainer</title>
   <style>
-    :root{--bg:#070912;--panel:#111827;--panel2:#172033;--text:#f5f7ff;--muted:#9aa6bd;--cyan:#73e8ff;--purple:#b996ff;--green:#5dff9a;--red:#ff6474;--yellow:#ffe66d;--card:#fffaf0;--black:#11131a;--shadow:rgba(0,0,0,.45)}
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent} html,body{margin:0;min-height:100%;background:radial-gradient(circle at top left,rgba(115,232,255,.18),transparent 34rem),radial-gradient(circle at top right,rgba(185,150,255,.16),transparent 28rem),linear-gradient(180deg,#070912,#0b1020);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif} body{min-height:100svh;display:flex;justify-content:center;padding:max(14px,env(safe-area-inset-top)) 14px max(18px,env(safe-area-inset-bottom))}.app{width:min(520px,100%);min-height:calc(100svh - 28px);display:flex;flex-direction:column;gap:12px} header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:2px 2px 0} h1{margin:0;font-size:clamp(1.55rem,8vw,2.25rem);line-height:.95;letter-spacing:-.06em}.subtitle{margin:6px 0 0;color:var(--muted);font-size:.95rem}.pill{flex:0 0 auto;padding:9px 11px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:var(--cyan);font-weight:800;font-size:.85rem}.panel{background:rgba(17,24,39,.88);border:1px solid rgba(255,255,255,.09);border-radius:24px;box-shadow:0 18px 40px var(--shadow);backdrop-filter:blur(14px)}.top-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{padding:12px 10px;text-align:center;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);border-radius:18px}.stat span{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}.stat b{font-size:1.8rem;letter-spacing:-.05em}.game{flex:1;padding:14px;display:flex;flex-direction:column;gap:12px}.table{flex:1;min-height:295px;border-radius:28px;background:radial-gradient(circle at 50% 50%,rgba(93,255,154,.17),transparent 46%),linear-gradient(145deg,#063b35,#081f2e);border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 0 0 9px rgba(255,255,255,.03);display:grid;place-items:center;position:relative;overflow:hidden;padding:22px}.table:before{content:"";position:absolute;width:78%;aspect-ratio:1;border-radius:50%;border:2px dashed rgba(255,255,255,.08)}.mode-label{position:absolute;top:16px;left:17px;color:rgba(255,255,255,.55);font-size:.75rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.deck-label{position:absolute;top:16px;right:17px;color:rgba(255,255,255,.5);font-size:.75rem;font-weight:700}.card{width:min(48vw,178px);height:min(68vw,250px);max-height:270px;border-radius:22px;background:var(--card);color:var(--black);box-shadow:0 26px 44px rgba(0,0,0,.42);position:relative;display:grid;place-items:center;animation:pop .18s ease-out both;z-index:1;user-select:none}.card.red{color:#d72742}@keyframes pop{from{transform:translateY(-12px) scale(.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}.corner{position:absolute;top:12px;left:12px;font-size:1.3rem;font-weight:900;line-height:.95;text-align:center}.corner.bottom{inset:auto 12px 12px auto;transform:rotate(180deg)}.big-rank{font-size:clamp(4.2rem,23vw,7.8rem);font-weight:950;letter-spacing:-.12em;margin-right:.08em}.big-suit{font-size:clamp(2.6rem,13vw,4.5rem);line-height:.6;text-align:center}.empty{z-index:1;text-align:center;color:rgba(255,255,255,.72);max-width:280px}.empty b{display:block;font-size:1.5rem;margin-bottom:6px;color:var(--text)}.prompt{padding:14px;border-radius:22px;background:var(--panel2);border:1px solid rgba(255,255,255,.08)}.prompt h2{margin:0 0 6px;font-size:1.28rem;letter-spacing:-.04em}.prompt p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.35}.feedback{margin-top:8px;min-height:23px;font-weight:800;font-size:.95rem}.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}.feedback.warn{color:var(--yellow)}.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}button{border:0;min-height:68px;border-radius:20px;color:#061018;font:inherit;font-size:1.2rem;font-weight:950;cursor:pointer;box-shadow:0 14px 26px rgba(0,0,0,.28);touch-action:manipulation}button:active{transform:scale(.98)}.plus{background:linear-gradient(135deg,var(--green),var(--cyan))}.zero{background:linear-gradient(135deg,#d6dce8,#fff)}.minus{background:linear-gradient(135deg,var(--red),#ffb46b)}.secondary-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.secondary{min-height:52px;background:rgba(255,255,255,.08);color:var(--text);border:1px solid rgba(255,255,255,.12);box-shadow:none;font-size:.98rem}.lesson{padding:13px 14px;border-radius:22px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);color:var(--muted);line-height:1.35;font-size:.92rem}.lesson strong{color:var(--text)}.mode-sheet{display:none;padding:12px;gap:9px}.mode-sheet.show{display:grid}.mode-btn{min-height:auto;padding:14px;border-radius:17px;text-align:left;font-size:.98rem;background:rgba(255,255,255,.07);color:var(--text);border:1px solid rgba(255,255,255,.1);box-shadow:none}.mode-btn.active{border-color:rgba(115,232,255,.8);background:rgba(115,232,255,.12)}.tiny{color:var(--muted);font-size:.78rem;text-align:center;padding-bottom:2px} small{font-size:.72rem;font-weight:800}@media(max-width:390px){body{padding-left:10px;padding-right:10px}.game{padding:11px}.top-stats{gap:6px}.stat{padding:10px 6px}.stat b{font-size:1.55rem}.actions{gap:8px}button{min-height:64px;font-size:1.08rem;border-radius:18px}.secondary{min-height:50px;font-size:.92rem}.table{min-height:270px;padding:18px}}@media(min-height:760px) and (max-width:620px){.table{min-height:360px}}
+    :root {
+      --bg: #070912;
+      --text: #f7f8ff;
+      --muted: rgba(247,248,255,.66);
+      --panel: rgba(18, 24, 39, .82);
+      --line: rgba(255,255,255,.10);
+      --green: #58ff9a;
+      --cyan: #75e8ff;
+      --red: #ff6678;
+      --orange: #ffb36b;
+      --card: #fff8eb;
+      --black: #11131a;
+      --shadow: rgba(0,0,0,.48);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(117,232,255,.15), transparent 28rem),
+        radial-gradient(circle at 80% 5%, rgba(255,102,120,.10), transparent 24rem),
+        linear-gradient(180deg, #070912, #0b1020 65%, #05070d);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      overflow: hidden;
+      padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
+    }
+
+    .app {
+      width: min(520px, 100%);
+      height: calc(100svh - max(14px, env(safe-area-inset-top)) - max(14px, env(safe-area-inset-bottom)));
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: 1fr auto auto;
+      gap: 14px;
+      position: relative;
+    }
+
+    .table {
+      min-height: 0;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at center, rgba(88,255,154,.14), transparent 45%),
+        linear-gradient(145deg, #06362f, #081d2c);
+      border: 1px solid var(--line);
+      box-shadow: inset 0 0 0 10px rgba(255,255,255,.025), 0 22px 50px var(--shadow);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 22px;
+    }
+
+    .table::before {
+      content: "";
+      position: absolute;
+      width: min(78vw, 390px);
+      aspect-ratio: 1;
+      border: 2px dashed rgba(255,255,255,.07);
+      border-radius: 50%;
+    }
+
+    .card {
+      width: min(58vw, 230px);
+      height: min(82vw, 324px);
+      max-height: 58svh;
+      border-radius: 26px;
+      background: var(--card);
+      color: var(--black);
+      box-shadow: 0 30px 54px rgba(0,0,0,.46);
+      position: relative;
+      display: grid;
+      place-items: center;
+      animation: deal .16s ease-out both;
+      z-index: 1;
+    }
+
+    .card.red {
+      color: #d42742;
+    }
+
+    @keyframes deal {
+      from { transform: translateY(-10px) scale(.97); opacity: .35; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .corner {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      font-size: clamp(1.25rem, 5vw, 1.85rem);
+      font-weight: 950;
+      line-height: .95;
+      text-align: center;
+      letter-spacing: -.04em;
+    }
+
+    .corner.bottom {
+      top: auto;
+      left: auto;
+      right: 14px;
+      bottom: 14px;
+      transform: rotate(180deg);
+    }
+
+    .center {
+      text-align: center;
+      transform: translateX(-.04em);
+    }
+
+    .rank {
+      font-size: clamp(5rem, 25vw, 9.5rem);
+      font-weight: 950;
+      line-height: .84;
+      letter-spacing: -.14em;
+      padding-right: .12em;
+    }
+
+    .suit {
+      font-size: clamp(3rem, 14vw, 5.5rem);
+      line-height: .8;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 22px;
+      min-height: 76px;
+      font: inherit;
+      font-size: clamp(1.45rem, 7vw, 2.15rem);
+      font-weight: 950;
+      color: #061018;
+      box-shadow: 0 16px 30px rgba(0,0,0,.32);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:active {
+      transform: scale(.985);
+      filter: brightness(.98);
+    }
+
+    .minus {
+      background: linear-gradient(135deg, var(--red), var(--orange));
+    }
+
+    .zero {
+      background: linear-gradient(135deg, #e8edf7, #ffffff);
+    }
+
+    .plus {
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+    }
+
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .small-btn {
+      min-height: 54px;
+      min-width: 112px;
+      padding: 0 18px;
+      border-radius: 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--text);
+      box-shadow: 0 12px 24px rgba(0,0,0,.25);
+      font-size: 1rem;
+      font-weight: 850;
+    }
+
+    .count-pill {
+      position: absolute;
+      left: 50%;
+      bottom: calc(54px + 14px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(10, 14, 24, .9);
+      border: 1px solid rgba(255,255,255,.13);
+      color: var(--text);
+      box-shadow: 0 16px 34px rgba(0,0,0,.4);
+      font-size: 1.15rem;
+      font-weight: 950;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .16s ease, transform .16s ease;
+      z-index: 10;
+    }
+
+    .count-pill.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-8px);
+    }
+
+    @media (max-width: 380px) {
+      body { padding-left: 10px; padding-right: 10px; }
+      .app { gap: 10px; }
+      .buttons { gap: 8px; }
+      button { min-height: 70px; border-radius: 19px; }
+      .small-btn { min-width: 104px; min-height: 50px; font-size: .95rem; }
+      .table { border-radius: 26px; }
+    }
   </style>
 </head>
 <body>
   <div class="app">
-    <header><div><h1>Card Count Trainer</h1><p class="subtitle">Tap the Hi-Lo value. Learn by feel.</p></div><div class="pill" id="modePill">Easy</div></header>
-    <section class="top-stats"><div class="stat"><span>Score</span><b id="score">0</b></div><div class="stat"><span>Streak</span><b id="streak">0</b></div><div class="stat"><span>Count</span><b id="count">0</b></div></section>
-    <main class="panel game">
-      <section class="table"><div class="mode-label" id="modeLabel">Easy Mode</div><div class="deck-label" id="deckLabel">52 cards</div><div id="cardSlot" class="empty"><b>Ready?</b>Tap Start, then choose +1, 0, or -1 for each card.</div></section>
-      <section class="prompt"><h2 id="promptTitle">What do I tap?</h2><p id="promptText">2–6 are +1. 7–9 are 0. 10, J, Q, K, and A are -1.</p><div id="feedback" class="feedback warn">Start whenever you’re ready.</div></section>
-      <section class="actions"><button class="plus" id="plusBtn">+1<br><small>2–6</small></button><button class="zero" id="zeroBtn">0<br><small>7–9</small></button><button class="minus" id="minusBtn">-1<br><small>10–A</small></button></section>
-      <section class="secondary-row"><button class="secondary" id="startBtn">Start</button><button class="secondary" id="modeBtn">Mode</button></section>
-      <section class="mode-sheet panel" id="modeSheet"><button class="mode-btn active" data-mode="easy">Easy — shows card groups on buttons</button><button class="mode-btn" data-mode="quiz">Quiz — hides hints after 10 correct</button><button class="mode-btn" data-mode="running">Running Count — keep the total going</button></section>
-      <div class="lesson"><strong>Hi-Lo cheat sheet:</strong> Low cards help the count go up. High cards make it go down. Neutral cards do nothing.</div>
-      <div class="tiny">Made for quick mobile practice. No casino, no pressure — just reps.</div>
+    <main class="table">
+      <div id="card" class="card"></div>
     </main>
+
+    <section class="buttons">
+      <button class="minus" id="minus">-1</button>
+      <button class="zero" id="zero">0</button>
+      <button class="plus" id="plus">+1</button>
+    </section>
+
+    <section class="bottom">
+      <button class="small-btn" id="reset">Reset</button>
+      <button class="small-btn" id="reveal">Reveal</button>
+    </section>
+
+    <div class="count-pill" id="countPill">Count: 0</div>
   </div>
-<script>
-const ranks=["A","2","3","4","5","6","7","8","9","10","J","Q","K"],suits=["♠","♥","♦","♣"],redSuits=new Set(["♥","♦"]);const state={deck:[],card:null,answer:null,score:0,streak:0,running:0,mode:"easy",started:false,locked:false,totalCorrect:0};const els={score:document.getElementById("score"),streak:document.getElementById("streak"),count:document.getElementById("count"),deckLabel:document.getElementById("deckLabel"),cardSlot:document.getElementById("cardSlot"),feedback:document.getElementById("feedback"),promptTitle:document.getElementById("promptTitle"),promptText:document.getElementById("promptText"),plus:document.getElementById("plusBtn"),zero:document.getElementById("zeroBtn"),minus:document.getElementById("minusBtn"),start:document.getElementById("startBtn"),modeBtn:document.getElementById("modeBtn"),modeSheet:document.getElementById("modeSheet"),modePill:document.getElementById("modePill"),modeLabel:document.getElementById("modeLabel")};
-function shuffle(array){const a=[...array];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}function newDeck(){const deck=[];for(const suit of suits)for(const rank of ranks)deck.push({rank,suit});state.deck=shuffle(deck);updateStats()}function hiLo(card){if(["2","3","4","5","6"].includes(card.rank))return 1;if(["7","8","9"].includes(card.rank))return 0;return -1}function fmt(num){return num>0?"+"+num:String(num)}function drawCard(){if(state.deck.length===0)newDeck();state.card=state.deck.pop();state.answer=hiLo(state.card);renderCard();updatePrompt();updateStats();state.locked=false}function renderCard(){const c=state.card,red=redSuits.has(c.suit)?" red":"";els.cardSlot.className="card"+red;els.cardSlot.innerHTML=`<div class="corner">${c.rank}<br>${c.suit}</div><div><div class="big-rank">${c.rank}</div><div class="big-suit">${c.suit}</div></div><div class="corner bottom">${c.rank}<br>${c.suit}</div>`}
-function updatePrompt(){if(state.mode==="running"){els.promptTitle.textContent="Keep the running count";els.promptText.textContent="Tap this card's value. Your Count box updates after every card."}else if(state.mode==="quiz"&&state.totalCorrect>=10){els.promptTitle.textContent="Quiz mode";els.promptText.textContent="Hints are hidden now. Trust your reflex."}else{els.promptTitle.textContent="Tap the card value";els.promptText.textContent="2–6 = +1. 7–9 = 0. 10/J/Q/K/A = -1."}}
-function guess(value){if(!state.started){startGame();return}if(state.locked||!state.card)return;state.locked=true;const correct=value===state.answer;if(correct){state.streak++;state.totalCorrect++;state.score+=10+Math.min(20,state.streak*2);state.running+=state.answer;els.feedback.className="feedback good";els.feedback.textContent=`Correct — ${fmt(state.answer)}. Nice!`}else{state.streak=0;els.feedback.className="feedback bad";els.feedback.textContent=`Oops — this one is ${fmt(state.answer)}.`;if(state.mode==="running")state.running+=state.answer}updateStats();setMode(state.mode,false);setTimeout(drawCard,correct?520:950)}
-function startGame(){state.started=true;state.running=0;state.streak=0;els.start.textContent="Reset";els.feedback.className="feedback warn";els.feedback.textContent="Here we go.";newDeck();drawCard()}function resetGame(){state.started=false;state.card=null;state.answer=null;state.score=0;state.streak=0;state.running=0;state.totalCorrect=0;newDeck();els.start.textContent="Start";els.cardSlot.className="empty";els.cardSlot.innerHTML="<b>Ready?</b>Tap Start, then choose +1, 0, or -1 for each card.";els.feedback.className="feedback warn";els.feedback.textContent="Start whenever you're ready.";updatePrompt();updateStats();setMode(state.mode,false)}function updateStats(){els.score.textContent=state.score;els.streak.textContent=state.streak;els.count.textContent=fmt(state.running);els.deckLabel.textContent=`${state.deck.length||52} cards`}
-function setMode(mode,close=true){state.mode=mode;document.querySelectorAll(".mode-btn").forEach(btn=>btn.classList.toggle("active",btn.dataset.mode===mode));const names={easy:"Easy",quiz:"Quiz",running:"Running"};els.modePill.textContent=names[mode];els.modeLabel.textContent=names[mode]+" Mode";if(close)els.modeSheet.classList.remove("show");const showHints=mode==="easy"||(mode==="quiz"&&state.totalCorrect<10);els.plus.innerHTML=showHints?"+1<br><small>2–6</small>":"+1";els.zero.innerHTML=showHints?"0<br><small>7–9</small>":"0";els.minus.innerHTML=showHints?"-1<br><small>10–A</small>":"-1";updatePrompt()}
-els.plus.addEventListener("click",()=>guess(1));els.zero.addEventListener("click",()=>guess(0));els.minus.addEventListener("click",()=>guess(-1));els.start.addEventListener("click",()=>state.started?resetGame():startGame());els.modeBtn.addEventListener("click",()=>els.modeSheet.classList.toggle("show"));document.querySelectorAll(".mode-btn").forEach(btn=>btn.addEventListener("click",()=>setMode(btn.dataset.mode)));document.addEventListener("keydown",e=>{if(e.key==="1")guess(1);if(e.key==="0")guess(0);if(e.key==="-"||e.key==="_")guess(-1);if(e.key.toLowerCase()==="r")resetGame()});newDeck();updateStats();
-</script>
+
+  <script>
+    const ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+    const suits = ["♠","♥","♦","♣"];
+    const redSuits = new Set(["♥","♦"]);
+
+    let deck = [];
+    let currentCard = null;
+    let currentCount = 0;
+    let revealTimer = null;
+    let locked = false;
+
+    const cardEl = document.getElementById("card");
+    const countPill = document.getElementById("countPill");
+
+    function shuffle(items) {
+      const arr = [...items];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function buildDeck() {
+      const fresh = [];
+      for (const suit of suits) {
+        for (const rank of ranks) {
+          fresh.push({ rank, suit });
+        }
+      }
+      deck = shuffle(fresh);
+    }
+
+    function value(card) {
+      if (["2","3","4","5","6"].includes(card.rank)) return 1;
+      if (["7","8","9"].includes(card.rank)) return 0;
+      return -1;
+    }
+
+    function formatCount(num) {
+      return num > 0 ? "+" + num : String(num);
+    }
+
+    function drawCard() {
+      if (deck.length === 0) buildDeck();
+      currentCard = deck.pop();
+      renderCard();
+      locked = false;
+    }
+
+    function renderCard() {
+      const red = redSuits.has(currentCard.suit);
+      cardEl.className = "card" + (red ? " red" : "");
+      cardEl.innerHTML = `
+        <div class="corner">${currentCard.rank}<br>${currentCard.suit}</div>
+        <div class="center">
+          <div class="rank">${currentCard.rank}</div>
+          <div class="suit">${currentCard.suit}</div>
+        </div>
+        <div class="corner bottom">${currentCard.rank}<br>${currentCard.suit}</div>
+      `;
+    }
+
+    function answer(num) {
+      if (locked) return;
+      locked = true;
+      currentCount += value(currentCard);
+      drawCard();
+    }
+
+    function revealCount() {
+      clearTimeout(revealTimer);
+      countPill.textContent = "Count: " + formatCount(currentCount);
+      countPill.classList.add("show");
+      revealTimer = setTimeout(() => {
+        countPill.classList.remove("show");
+      }, 1600);
+    }
+
+    function reset() {
+      currentCount = 0;
+      buildDeck();
+      drawCard();
+      countPill.classList.remove("show");
+    }
+
+    document.getElementById("minus").addEventListener("click", () => answer(-1));
+    document.getElementById("zero").addEventListener("click", () => answer(0));
+    document.getElementById("plus").addEventListener("click", () => answer(1));
+    document.getElementById("reveal").addEventListener("click", revealCount);
+    document.getElementById("reset").addEventListener("click", reset);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "-" || e.key === "_") answer(-1);
+      if (e.key === "0") answer(0);
+      if (e.key === "1" || e.key === "+") answer(1);
+      if (e.key.toLowerCase() === "r") reset();
+      if (e.key === " ") revealCount();
+    });
+
+    reset();
+  </script>
 </body>
 </html>
