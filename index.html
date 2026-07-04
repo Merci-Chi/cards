@@ -500,9 +500,11 @@
       bestStreakEl.textContent = bestStreak;
     }
 
-    function saveBestStreak() {
-      localStorage.setItem(BEST_KEY, String(bestStreak));
-      updateStreaks();
+    function commitBestStreak() {
+      if (currentStreak > bestStreak) {
+        bestStreak = currentStreak;
+        localStorage.setItem(BEST_KEY, String(bestStreak));
+      }
     }
 
     function answer(num) {
@@ -516,16 +518,12 @@
 
       if (isCorrect) {
         currentStreak += 1;
-        if (currentStreak > bestStreak) {
-          bestStreak = currentStreak;
-          saveBestStreak();
-        } else {
-          updateStreaks();
-        }
       } else {
+        commitBestStreak();
         currentStreak = 0;
-        updateStreaks();
       }
+
+      updateStreaks();
 
       flashMark(isCorrect);
       setTimeout(drawCard, 620);
@@ -541,6 +539,7 @@
     }
 
     function reset() {
+      commitBestStreak();
       currentCount = 0;
       currentStreak = 0;
       buildDeck();
@@ -564,7 +563,7 @@
       if (e.key === " ") revealCount();
     });
 
-    saveBestStreak();
+    updateStreaks();
     reset();
   </script>
 </body>
