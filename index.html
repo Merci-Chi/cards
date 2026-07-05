@@ -346,6 +346,29 @@
       transform: translate(-50%, -50%) scale(1);
     }
 
+    #guessArea{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    
+    #countGuess{
+      width:90px;
+      font-size:1.2rem;
+      text-align:center;
+      padding:8px;
+      border-radius:10px;
+      border:none;
+    }
+    
+    #submitGuess{
+      min-height:44px;
+      padding:0 14px;
+      border-radius:10px;
+      background:#75e8ff;
+      font-weight:900;
+    }
+
     @media (max-height: 620px) {
       body { padding-top: 6px; padding-bottom: 6px; }
       .app { gap: 6px; height: calc(100dvh - 12px); }
@@ -379,7 +402,20 @@
     <main class="table">
       <div id="card" class="card"></div>
       <div id="mark" class="mark">✓</div>
-      <div class="count-pill" id="countPill">Count: 0</div>
+      <div class="count-pill" id="countPill">
+  <div id="guessArea">
+    <input
+      id="countGuess"
+      type="number"
+      placeholder="Running Count"
+      autocomplete="off"
+      inputmode="numeric"
+    >
+    <button id="submitGuess">Submit</button>
+  </div>
+
+  <div id="countResult" style="display:none;font-weight:900;"></div>
+</div>
     </main>
 
     <section class="buttons">
@@ -418,6 +454,10 @@
     const countPill = document.getElementById("countPill");
     const currentStreakEl = document.getElementById("currentStreak");
     const bestStreakEl = document.getElementById("bestStreak");
+    const guessArea = document.getElementById("guessArea");
+    const countGuess = document.getElementById("countGuess");
+    const submitGuess = document.getElementById("submitGuess");
+    const countResult = document.getElementById("countResult");
 
     document.addEventListener("gesturestart", function(e) {
       e.preventDefault();
@@ -531,11 +571,38 @@
 
     function revealCount() {
       clearTimeout(revealTimer);
-      countPill.textContent = "Count: " + formatCount(currentCount);
+    
+      countResult.style.display = "none";
+      guessArea.style.display = "flex";
+    
+      countGuess.value = "";
       countPill.classList.add("show");
+    
+      setTimeout(() => countGuess.focus(), 50);
+    }
+
+    function submitCountGuess() {
+
+      const guess = Number(countGuess.value);
+    
+      const correct = guess === currentCount;
+    
+      guessArea.style.display = "none";
+      countResult.style.display = "block";
+    
+      countResult.innerHTML =
+        (correct ? "✅ Correct!<br>" : "❌ Wrong<br>") +
+        "Count: " + formatCount(currentCount);
+    
       revealTimer = setTimeout(() => {
+    
         countPill.classList.remove("show");
-      }, 1600);
+    
+        countResult.style.display = "none";
+        guessArea.style.display = "flex";
+        countGuess.value = "";
+    
+      }, 1800);
     }
 
     function reset() {
@@ -554,6 +621,11 @@
     document.getElementById("minus").addEventListener("click", () => answer(-1));
     document.getElementById("reveal").addEventListener("click", revealCount);
     document.getElementById("reset").addEventListener("click", reset);
+    submitGuess.addEventListener("click", submitCountGuess);
+
+    countGuess.addEventListener("keydown", e => {
+      if (e.key === "Enter") submitCountGuess();
+    });
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "1" || e.key === "+") answer(1);
