@@ -605,16 +605,16 @@
       }, 1800);
     }
 
-    function reset() {
-      commitBestStreak();
-      currentCount = 0;
-      currentStreak = 0;
-      buildDeck();
-      drawCard();
-      countPill.classList.remove("show");
-      markEl.className = "mark";
-      updateStreaks();
-    }
+      function reset() {
+        commitBestStreak();
+        currentCount = 0;
+        currentStreak = 0;
+        buildDeck();
+        drawCard();
+        countPill.classList.remove("show");
+        markEl.className = "mark";
+        updateStreaks();
+      }
 
     document.getElementById("plus").addEventListener("click", () => answer(1));
     document.getElementById("zero").addEventListener("click", () => answer(0));
